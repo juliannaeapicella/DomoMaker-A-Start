@@ -31,7 +31,7 @@ $(document).ready(() => {
 
     if($("#user").val() == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
       handleError("RAWR! All fields are required");
-      return false;
+      return false; 
     }
 
     if($("#pass").val() !== $("#pass2").val()) {

@@ -11,8 +11,6 @@ const makerPage = (req, res) => {
 
     return res.render('app', { domos: docs });
   });
-
-  res.render('app');
 };
 
 const makeDomo = (req, res) => {
@@ -38,7 +36,7 @@ const makeDomo = (req, res) => {
       return res.status(400).json({ error: 'Domo already exists.' });
     }
 
-    return res.status(400).json({ error: 'An error occured' });
+    return res.status(400).json({ error: 'An error occured!' });
   });
 
   return domoPromise;

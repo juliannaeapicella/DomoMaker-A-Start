@@ -1,4 +1,3 @@
-const { request } = require('express');
 const models = require('../models');
 
 const { Domo } = models;
@@ -43,8 +42,8 @@ const makeDomo = (req, res) => {
   return domoPromise;
 };
 
-const getDomos = (_request, response) => {
-  const req = _request;
+const getDomos = (request, response) => {
+  const req = request;
   const res = response;
 
   return Domo.DomoModel.findByOwner(req.session.account._id, (err, docs) => {

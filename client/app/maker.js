@@ -1,9 +1,11 @@
+let token;
+
 const handleDomo = (e) => {
   e.preventDefault();
 
   $("#domoMessage").animate({width:'hide'},350);
 
-  if($("#domoName").val() == '' || $("#domoAge").val() == '') {
+  if($("#domoName").val() == '' || $("#domoAge").val() == '' || $("#domoLevel").val() == '') {
     handleError("RAWR! All fields are required.");
     return false;
   }
@@ -28,6 +30,8 @@ const DomoForm = (props) => {
         <input id="domoName" type="text" name="name" placeholder="Domo Name" />
         <label htmlFor="age">Age: </label>
         <input id="domoAge" type="text" name="age" placeholder="Domo Age" />
+        <label htmlFor="level">Level: </label>
+        <input id="domoLevel" type="text" name="level" placeholder="Domo Level" />
         <input type="hidden" name="_csrf" value={props.csrf} />
         <input className="makeDomoSubmit" type="submit" value="Make Domo" />
     </form>
@@ -45,11 +49,18 @@ const DomoList = function(props) {
 
   const domoNodes = props.domos.map(function(domo) {
     return (
-        <div key={domo._id} className="domo">
+        <form key={domo._id} 
+          id={domo._id} 
+          className="domo" 
+          onSubmit={deleteDomo}
+          action="/deleteDomo"
+          method="DELETE">
             <img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace" />
             <h3 className="domoName">Name: {domo.name} </h3>
             <h3 className="domoAge">Age: {domo.age} </h3>
-        </div>
+            <h3 className="domoLevel">Level: {domo.level} </h3>
+            <input className="deleteDomoSubmit" type="submit" value="Delete" />
+        </form>
     );
   });
 
@@ -63,9 +74,21 @@ const DomoList = function(props) {
 const loadDomosFromServer = () => {
   sendAjax('GET', '/getDomos', null, (data) => {
     ReactDOM.render(
-        <DomoList domos={data.domos} />, document.querySelector("#domos")
+        <DomoList domos={data.domos}/>, document.querySelector("#domos")
     );
   });
+};
+
+const deleteDomo = (e) => {
+    e.preventDefault();
+
+    const data = `id=${e.currentTarget.id}&_csrf=${token}`
+
+    sendAjax('DELETE', "/deleteDomo", data, () => {
+        loadDomosFromServer();
+    });
+
+    return false;
 };
 
 const setup = function(csrf) {
@@ -76,6 +99,8 @@ const setup = function(csrf) {
   ReactDOM.render(
     <DomoForm domos={[]} />, document.querySelector("#domos")
   );
+
+  token = csrf;
 
   loadDomosFromServer();
 };

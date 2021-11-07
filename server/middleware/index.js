@@ -14,15 +14,13 @@ const requiresLogout = (req, res, next) => {
 };
 
 const requiresSecure = (req, res, next) => {
-  console.log('on prod');
-  if (req.headers['x-forwarded=proto'] !== 'https') {
+  if (req.headers['x-forwarded-proto'] !== 'https') {
     return res.redirect(`https://${req.hostname}${req.url}`);
   }
   return next();
 };
 
 const bypassSecure = (req, res, next) => {
-  console.log('bypassing secure');
   next();
 };
 
